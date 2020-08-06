@@ -1,0 +1,1021 @@
+openapi: 3.0.3
+info:
+  title: Crabi public api
+  description: Crabi public api
+  contact:
+    email: opont@crabi.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 2.0.0
+servers:
+- url: http://localhost:8080/
+  description: local mock server
+- url: https://publicapi.crabi.com/v2/
+  description: Prod server
+- url: https://publicapi.qa.crabi.net/v2/
+  description: QA server
+- url: https://publicapi.preprod.crabi.net/v2/
+  description: Pre Production server
+- url: https://publicapi.dev.crabi.net/v2/
+  description: Development server
+tags:
+- name: policy
+  description: Policy realted
+- name: person
+  description: Moral or phisical person
+- name: session
+  description: user/sessions stuff
+paths:
+  /policy/search:
+    get:
+      tags:
+      - policy
+      summary: searches policies
+      description: |
+        By passing in the appropriate options, you can search for
+        available policies in the system
+      operationId: searchPolicy
+      parameters:
+      - name: os-name
+        in: header
+        description: os name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Android
+      - name: os-version
+        in: header
+        description: device model
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Android 9
+      - name: brand
+        in: header
+        description: device brand
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Samsung
+      - name: client-version
+        in: header
+        description: frontend client version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: android-1.10.3
+      - name: policy-number
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: ae-101
+      - name: results
+        in: query
+        description: number of records to retrun
+        required: false
+        style: form
+        explode: true
+        schema:
+          maximum: 50
+          minimum: 1
+          type: integer
+          default: 10
+      - name: pagination
+        in: query
+        description: number of records to skip for pagination
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 0
+      - name: status
+        in: query
+        description: policy status
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          default: ACTIVE
+          enum:
+          - ISSUED
+          - ACTIVE
+          - CANCELLED
+          - HOLD
+      - name: vehicle-plates
+        in: query
+        description: vehicle insured plates
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: aej2030
+      - name: person-phone
+        in: query
+        description: policy holder phone
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+        example: 3320357045
+      - name: person-email
+        in: query
+        description: policy holder email
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: email
+        example: example@email.com
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+        "400":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+      - bearerAuth: []
+      x-swagger-router-controller: Policy
+  /users/login:
+    post:
+      tags:
+      - user
+      summary: Logs user into the system
+      operationId: loginUser
+      parameters:
+      - name: os-name
+        in: header
+        description: os name
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Android
+      - name: os-version
+        in: header
+        description: device model
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Android 9
+      - name: brand
+        in: header
+        description: device brand
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: Samsung
+      - name: client-version
+        in: header
+        description: frontend client version
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: android-1.10.3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            X-Rate-Limit:
+              description: Calls per hour allowed by the user
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: Date in UTC when token expires
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+      x-swagger-router-controller: User
+components:
+  schemas:
+    Token:
+      type: object
+      properties:
+        expiresOn:
+          $ref: '#/components/schemas/DateTime'
+        token:
+          type: string
+      example:
+        expiresOn: 2020-09-04T17:00:07Z
+        token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJSUzI1NiIsImRldmljZV9pZCI6ImFzZGFzZHNzcyIsImV4cCI6MTU5OTIzODgwNywiaXNfcmVmcmVzaF90b2tlbiI6ZmFsc2UsInJvbGVzIjpbIkJBU0lDIl0sInN1YiI6IiIsInR5cCI6IkpXVCJ9.rJxeiuf8h6tKnzXHDADeq2G3u78CWRnvsAI4oJEJHoL8Kv5rPnO9phZN6oqlvEiFNdjxNZsAPeQN5-Y25nOMVqgKgk3eeJ9ne9dFpf2y5agosWzRR477deNngY9wDsgsjTxY3XDOZQV8rkIlf86pRcgf3kaIodTtqcAQtl_r9vJu35h4GkUU49HZA_dYe8g0sq7ykkm52dh4wWXo0IcfNuubHlCZ-4LNYyTqhCyoGLCeVx2KkfMPg17hf8JjivGZDpF_2vvN77e7Wnwi_BtQR427YeSEi9IgUyp4C-6iGPV3j-LzVjNHbMX0Ln6ZdY41a4avROZdLCF2ijFRoJ7WbQ
+    Session:
+      type: object
+      properties:
+        accessToken:
+          $ref: '#/components/schemas/Token'
+        refreshToken:
+          $ref: '#/components/schemas/Token'
+      example:
+        accessToken:
+          expiresOn: 2020-09-04T17:00:07Z
+          token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJSUzI1NiIsImRldmljZV9pZCI6ImFzZGFzZHNzcyIsImV4cCI6MTU5OTIzODgwNywiaXNfcmVmcmVzaF90b2tlbiI6ZmFsc2UsInJvbGVzIjpbIkJBU0lDIl0sInN1YiI6IiIsInR5cCI6IkpXVCJ9.rJxeiuf8h6tKnzXHDADeq2G3u78CWRnvsAI4oJEJHoL8Kv5rPnO9phZN6oqlvEiFNdjxNZsAPeQN5-Y25nOMVqgKgk3eeJ9ne9dFpf2y5agosWzRR477deNngY9wDsgsjTxY3XDOZQV8rkIlf86pRcgf3kaIodTtqcAQtl_r9vJu35h4GkUU49HZA_dYe8g0sq7ykkm52dh4wWXo0IcfNuubHlCZ-4LNYyTqhCyoGLCeVx2KkfMPg17hf8JjivGZDpF_2vvN77e7Wnwi_BtQR427YeSEi9IgUyp4C-6iGPV3j-LzVjNHbMX0Ln6ZdY41a4avROZdLCF2ijFRoJ7WbQ
+        refreshToken: null
+    Error:
+      type: object
+      properties:
+        category:
+          type: integer
+          description: Type of error (category)
+        code:
+          type: integer
+          description: Specific code
+        message:
+          type: string
+          description: Error message
+        httpCode:
+          type: integer
+      example:
+        category: 1
+        code: 1
+        message: this an error message
+        httpCode: 404
+    Code:
+      title: Reference code
+      type: integer
+      description: Integer reference
+      example: 1372
+    Id:
+      type: string
+      format: uuid
+      example: 81b1c0a8-4843-45c5-8836-734a0bb26718
+    DateTime:
+      type: string
+      description: rfc3339 date time
+      format: date-time
+      example: 2020-09-21T17:00:07Z
+    Date:
+      type: string
+      format: rfc 3339 date (without time)
+      example: 2020-09-21
+    PolicyType:
+      required:
+      - coverages
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+        description:
+          type: string
+      example:
+        id: b6bee0c5-15ae-4ad9-8f6e-c7a0ed021103
+        name: valor comercial anual
+        description: poliza anual de valor comercial
+    VehicleBrand:
+      title: Vehicle brand
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        amisCode:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the brand
+          pattern: ^(.*)$
+          type: string
+      description: vehicle brand like honda
+      example:
+        code: 8
+        name: dodge
+        amisCode: 2
+    VehicleModel:
+      title: Vehicle model
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        amisCode:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the vehicle type
+          pattern: ^(.*)$
+          type: string
+      description: like Civic (which belongs to honda brand)
+      example:
+        code: 171
+        name: challenger
+        amisCode: 1108
+    VehicleYear:
+      title: Vehicle year
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the vehicle model
+          pattern: ^(.*)$
+          type: string
+      description: like Civic 2019 (which belongs to honda brand and Civic)
+      example:
+        code: 1116
+        name: "2014"
+    VehicleVersion:
+      title: Vehicle version
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the vehicle version
+          pattern: ^(.*)$
+          type: string
+        class:
+          $ref: '#/components/schemas/VehicleVersion_class'
+        vehicleType:
+          $ref: '#/components/schemas/VehicleVersion_vehicleType'
+        usages:
+          type: array
+          items:
+            $ref: '#/components/schemas/VehicleUsage'
+        characteristics:
+          type: array
+          items:
+            $ref: '#/components/schemas/VehicleVersion_characteristics'
+      example:
+        code: 4804
+        name: srt8 atx, v8, 6.4l, 470 cp, 4 puertas, aut
+        class:
+          code: 17
+          name: deportivo
+        vehicleType:
+          code: 1
+          name: automovil
+    Vehicle:
+      required:
+      - brand
+      - model
+      - plates
+      - version
+      - vin
+      - year
+      type: object
+      properties:
+        brand:
+          $ref: '#/components/schemas/VehicleBrand'
+        model:
+          $ref: '#/components/schemas/VehicleModel'
+        year:
+          $ref: '#/components/schemas/VehicleYear'
+        version:
+          $ref: '#/components/schemas/VehicleVersion'
+        plates:
+          title: plates without special charactes
+          pattern: ^\[A-Z0-9]{5-7}$
+          type: string
+          example: AEJ2030
+        vin:
+          title: vin or serial number string
+          pattern: ^\[A-Z0-9]{11-17}$
+          type: string
+          example: 19XFB2F5XCE316987
+        color:
+          $ref: '#/components/schemas/Vehicle_color'
+        usage:
+          $ref: '#/components/schemas/VehicleUsage'
+    VehicleUsage:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          type: string
+    MoneyValue:
+      title: Money Value
+      type: integer
+      description: 1000 money units are 1 unit of the current currency
+      example: 1654640
+    Percentage:
+      maximum: 1
+      minimum: 0
+      type: number
+      description: Decimal representation of a porcentage value
+      format: float
+      example: 0.05
+    CoverageType:
+      required:
+      - description
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          example: GM
+        description:
+          type: string
+          example: gastos medicos
+      description: Information about properties of a given coverage,
+    Coverage:
+      required:
+      - coverageType
+      - enabled
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        coverageType:
+          $ref: '#/components/schemas/CoverageType'
+        deductible:
+          $ref: '#/components/schemas/Percentage'
+        sumAssured:
+          type: integer
+          description: sum oassured of the coverage
+          example: 300000
+        enabled:
+          type: boolean
+          default: false
+        status:
+          type: string
+        premium:
+          $ref: '#/components/schemas/MoneyValue'
+    Beneficiary:
+      type: object
+      properties:
+        person:
+          $ref: '#/components/schemas/Person'
+        percentage:
+          $ref: '#/components/schemas/Percentage'
+    Gender:
+      title: Gender
+      required:
+      - code
+      - name
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the gender
+          pattern: ^(.*)$
+          type: string
+          example: masculino
+    PhisicalPerson:
+      type: object
+      properties:
+        birthdate:
+          $ref: '#/components/schemas/Date'
+        civilStatus:
+          $ref: '#/components/schemas/CivilStatus'
+        firstLastName:
+          title: First last name
+          type: string
+          example: garciía
+        secondLastName:
+          title: The Second last name
+          type: string
+          example: luna
+        gender:
+          $ref: '#/components/schemas/Gender'
+    MoralPerson:
+      properties:
+        startDate:
+          $ref: '#/components/schemas/Date'
+    InsuredEntity:
+      required:
+      - entity
+      type: object
+      properties:
+        entity:
+          anyOf:
+          - $ref: '#/components/schemas/Vehicle'
+        coverages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coverage'
+        beneficiaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Beneficiary'
+        drivers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+    Policy:
+      required:
+      - coverages
+      - policyType
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        policyType:
+          $ref: '#/components/schemas/PolicyType'
+        status:
+          type: string
+          enum:
+          - ISSUED
+          - ACTIVE
+          - CANCELLED
+          - HOLD
+        starteDate:
+          $ref: '#/components/schemas/DateTime'
+        endDate:
+          $ref: '#/components/schemas/DateTime'
+        issueDate:
+          $ref: '#/components/schemas/DateTime'
+        insuredEntities:
+          $ref: '#/components/schemas/InsuredEntity'
+        netPremium:
+          type: number
+        subtotal:
+          type: number
+        fee:
+          type: number
+        taxes:
+          type: number
+        total:
+          type: number
+        number:
+          type: string
+        policyHolder:
+          $ref: '#/components/schemas/Person'
+    SearchResult:
+      required:
+      - policies
+      type: object
+      properties:
+        policies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Policy'
+      example:
+        policies:
+        - fee: 0
+          taxes: 454070
+          starteDate: 2020-09-21T17:00:07Z
+          netPremium: 2837910
+          total: 3291980
+          subtotal: 2837910
+          policyType:
+            id: b6bee0c5-15ae-4ad9-8f6e-c7a0ed021103
+            name: valor comercial anual
+            description: poliza anual de valor comercial
+          insuredEntities:
+          - coverages:
+            - id: 4d2a605d-a74a-41e3-b79d-a3c63988ab8a
+              coverage_type:
+                id: ca2ead83-5b81-4480-9a0b-744ba31601c0
+                name: AL
+              enabled: true
+              premium: 233330
+            - id: 15503afe-19e2-470b-8d57-697fb3ac45e7
+              coverage_type:
+                id: 6c434f2a-d0f3-4442-b4c5-6680ec0fda6d
+                name: GM
+              sum_assured: 400000
+              enabled: true
+              premium: 53500
+            - id: 650021f5-69a4-49e9-9eaf-bbb01400c7d2
+              coverage_type:
+                id: 42d81165-f6f7-4c0d-b33b-999a3f3ee905
+                name: RCP
+              sum_assured: 1500000
+              enabled: true
+              premium: 271990
+            - id: 8b1585ce-d5be-45c5-9d7b-ba043cd06689
+              coverage_type:
+                id: fa67b067-ffdf-431b-aef5-53e60dfe6be6
+                name: RCB
+              sum_assured: 1500000
+              enabled: true
+              premium: 407990
+            - id: f4609945-fc92-4c1f-a5f3-a7a01a8cbe91
+              coverage_type:
+                id: c2b3cdd7-2c89-4d92-aa04-6b343ad91425
+                name: DM
+              deductible: 0.1
+              sum_assured: 243408
+              enabled: true
+              premium: 1167500
+            - id: 8cda7f03-1a49-4a61-a9f0-70b716d89efa
+              coverage_type:
+                id: ed22aeaf-8623-4d4d-ad59-106a774ed9a5
+                name: AV
+              enabled: true
+              premium: 100000
+            - id: c37b9590-2d30-4fff-a94f-92fb1842357f
+              coverage_type:
+                id: fc9e6248-5746-4480-a9d0-d683cb6a6c10
+                name: RT
+              deductible: 0.05
+              sum_assured: 243408
+              enabled: true
+              premium: 603600
+            beneficiaries:
+            - id: 59f6dece-1c10-49a1-9be6-bada6b7928c7
+              email: example@email.com
+              names: juan carlos
+              personType: FISICA
+              phones:
+              - number: "3320357045"
+                type: main
+                countryNumberCode: +52
+              rfc: GALJ620819V96
+              personTypeData:
+                birthdate: 1962-08-19
+                civilStatus:
+                  id: 0
+                  description: unknown
+                firstLastName: garciía
+                secondLastName: luna
+                gender:
+                  code: 0
+                  name: No Definido
+            entity:
+              brand:
+                code: 8
+                name: dodge
+                amisCode: 2
+              model:
+                code: 171
+                name: challenger
+                amisCode: 1108
+              year:
+                code: 1116
+                name: "2014"
+              version:
+                code: 4804
+                name: srt8 atx, v8, 6.4l, 470 cp, 4 puertas, aut
+                class:
+                  code: 17
+                  name: deportivo
+                vehicleType:
+                  code: 1
+                  name: automovil
+              plates: AEJ2030
+              vin: 19XFB2F5XCE316987
+              color:
+                code: 0
+                name: no definido
+              usage:
+                code: 1
+                name: particular
+            drivers:
+            - id: 59f6dece-1c10-49a1-9be6-bada6b7928c7
+              email: example@email.com
+              names: juan carlos
+              personType: FISICA
+              phones:
+              - number: "3320357045"
+                type: main
+                countryNumberCode: +52
+              rfc: GALJ620819V96
+              personTypeData:
+                birthdate: 1962-08-19
+                civilStatus:
+                  id: 0
+                  description: unknown
+                firstLastName: garciía
+                secondLastName: luna
+                gender:
+                  code: 0
+                  name: No Definido
+          id: 81b1c0a8-4843-45c5-8836-734a0bb26718
+          number: ae-101
+          status: ISSUED
+          policyHolder:
+            id: 59f6dece-1c10-49a1-9be6-bada6b7928c7
+            email: example@email.com
+            names: juan carlos
+            personType: FISICA
+            phones:
+            - number: "3320357045"
+              type: main
+              countryNumberCode: +52
+            rfc: GALJ620819V96
+            personTypeData:
+              birthdate: 1962-08-19
+              civilStatus:
+                id: 0
+                description: unknown
+              firstLastName: garciía
+              secondLastName: luna
+              gender:
+                code: 0
+                name: No Definido
+    CivilStatus:
+      title: Civil status
+      required:
+      - code
+      - name
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the civil status
+          pattern: ^(.*)$
+          type: string
+    Phone:
+      required:
+      - number
+      type: object
+      properties:
+        number:
+          pattern: ^\d{10}$
+          type: string
+          format: phone
+        phoneType:
+          type: string
+          description: type of phone number
+          default: main
+        countryNumberCode:
+          type: string
+          default: +52
+    Email:
+      pattern: ^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
+      type: string
+      format: email
+    Country:
+      title: Country
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the country
+          pattern: ^(.*)$
+          type: string
+        enabled:
+          type: boolean
+        demonym:
+          type: string
+    State:
+      title: Geographic state
+      required:
+      - code
+      - name
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        enabled:
+          type: boolean
+        name:
+          title: Name of the state
+          pattern: ^(.*)$
+          type: string
+    Municipality:
+      title: Geographic municipality
+      required:
+      - cnbvCode
+      - code
+      - name
+      - stateCode
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the municipality
+          pattern: ^(.*)$
+          type: string
+    PostalEntity:
+      title: Postal code entity
+      required:
+      - cnbvCode
+      - code
+      - municipalityCode
+      - name
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        sepomexCode:
+          $ref: '#/components/schemas/Code'
+        stateCode:
+          $ref: '#/components/schemas/Code'
+        countryCode:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Postal code number
+          pattern: ^(.*)$
+          type: string
+        stateName:
+          title: Name of the municipality
+          pattern: ^(.*)$
+          type: string
+        municipalityName:
+          title: Name of the municipality
+          pattern: ^(.*)$
+          type: string
+        countryName:
+          title: Name of the municipality
+          pattern: ^(.*)$
+          type: string
+    AddressType:
+      title: Address type
+      required:
+      - code
+      - name
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the civil status
+          pattern: ^(.*)$
+          type: string
+    DwellingType:
+      title: Dwelling type
+      required:
+      - code
+      - name
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          title: Name of the dwelling type
+          pattern: ^(.*)$
+          type: string
+    Address:
+      title: Address Schema
+      required:
+      - addressType
+      - country
+      - dwellingType
+      - externalNumber
+      - internalNumber
+      - municipality
+      - neighborhood
+      - postalEntity
+      - state
+      - street
+      type: object
+      properties:
+        addressType:
+          $ref: '#/components/schemas/AddressType'
+        country:
+          $ref: '#/components/schemas/Country'
+        dwellingType:
+          $ref: '#/components/schemas/DwellingType'
+        externalNumber:
+          title: Address external number
+          type: string
+        internalNumber:
+          title: Address internal number
+          type: string
+        municipality:
+          $ref: '#/components/schemas/Municipality'
+        neighborhood:
+          title: Neighborhood
+          type: string
+        postalEntity:
+          $ref: '#/components/schemas/PostalEntity'
+        state:
+          $ref: '#/components/schemas/State'
+        street:
+          title: Street name
+          type: string
+    Person:
+      title: Person
+      required:
+      - address
+      - email
+      - id
+      - personType
+      - phone
+      - rfc
+      - specificData
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        personType:
+          type: string
+          enum:
+          - FISICA
+          - MORAL
+        id:
+          $ref: '#/components/schemas/Id'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+        email:
+          $ref: '#/components/schemas/Email'
+        names:
+          title: The names or social of the person
+          type: string
+        rfc:
+          title: RFC
+          pattern: ^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([A-Z\d]{3})?$
+          type: string
+        personTypeData:
+          anyOf:
+          - $ref: '#/components/schemas/PhisicalPerson'
+          - $ref: '#/components/schemas/MoralPerson'
+    body:
+      type: object
+      properties:
+        password:
+          type: string
+        user:
+          type: string
+          format: email
+    VehicleVersion_class:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          type: string
+    VehicleVersion_vehicleType:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/VehicleUsage'
+        name:
+          type: string
+      description: vehicle type such as 'automovil'
+    VehicleVersion_characteristics:
+      type: object
+      properties:
+        characteristicTypeCode:
+          $ref: '#/components/schemas/Code'
+        characteristicTypeName:
+          type: string
+        value:
+          type: string
+    Vehicle_color:
+      properties:
+        code:
+          $ref: '#/components/schemas/Code'
+        name:
+          type: string
+      example: '{"code":0,"name":"no definido"}'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
