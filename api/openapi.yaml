@@ -130,7 +130,7 @@ paths:
         explode: true
         schema:
           type: string
-        example: "3320357045"
+        example: '3320357045'
       - name: person-email
         in: query
         description: policy holder email
@@ -142,25 +142,25 @@ paths:
           format: email
         example: example@email.com
       responses:
-        "200":
+        '200':
           description: search results matching criteria
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/SearchResult'
-        "400":
+        '400':
           description: bad input parameter
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        "403":
+        '403':
           description: bad input parameter
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        "500":
+        '500':
           description: bad input parameter
           content:
             application/json:
@@ -219,7 +219,7 @@ paths:
               $ref: '#/components/schemas/LoginBody'
         required: true
       responses:
-        "200":
+        '200':
           description: Successful operation
           headers:
             X-Rate-Limit:
@@ -290,7 +290,7 @@ paths:
             schema:
               $ref: '#/components/schemas/body'
       responses:
-        "200":
+        '200':
           description: Successful operation
           headers:
             X-Rate-Limit:
@@ -322,7 +322,7 @@ components:
         token:
           type: string
       example:
-        expiresOn: 2020-09-04T17:00:07Z
+        expiresOn: '2020-09-04T17:00:07Z'
         token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJSUzI1NiIsImRldmljZV9pZCI6ImFzZGFzZHNzcyIsImV4cCI6MTU5OTIzODgwNywiaXNfcmVmcmVzaF90b2tlbiI6ZmFsc2UsInJvbGVzIjpbIkJBU0lDIl0sInN1YiI6IiIsInR5cCI6IkpXVCJ9.rJxeiuf8h6tKnzXHDADeq2G3u78CWRnvsAI4oJEJHoL8Kv5rPnO9phZN6oqlvEiFNdjxNZsAPeQN5-Y25nOMVqgKgk3eeJ9ne9dFpf2y5agosWzRR477deNngY9wDsgsjTxY3XDOZQV8rkIlf86pRcgf3kaIodTtqcAQtl_r9vJu35h4GkUU49HZA_dYe8g0sq7ykkm52dh4wWXo0IcfNuubHlCZ-4LNYyTqhCyoGLCeVx2KkfMPg17hf8JjivGZDpF_2vvN77e7Wnwi_BtQR427YeSEi9IgUyp4C-6iGPV3j-LzVjNHbMX0Ln6ZdY41a4avROZdLCF2ijFRoJ7WbQ
     Session:
       type: object
@@ -333,10 +333,10 @@ components:
           $ref: '#/components/schemas/Token'
       example:
         accessToken:
-          expiresOn: 2020-09-04T17:00:07Z
+          expiresOn: '2020-09-04T17:00:07Z'
           token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJSUzI1NiIsImRldmljZV9pZCI6ImFzZGFzZHNzcyIsImV4cCI6MTU5OTIzODgwNywiaXNfcmVmcmVzaF90b2tlbiI6ZmFsc2UsInJvbGVzIjpbIkJBU0lDIl0sInN1YiI6IiIsInR5cCI6IkpXVCJ9.rJxeiuf8h6tKnzXHDADeq2G3u78CWRnvsAI4oJEJHoL8Kv5rPnO9phZN6oqlvEiFNdjxNZsAPeQN5-Y25nOMVqgKgk3eeJ9ne9dFpf2y5agosWzRR477deNngY9wDsgsjTxY3XDOZQV8rkIlf86pRcgf3kaIodTtqcAQtl_r9vJu35h4GkUU49HZA_dYe8g0sq7ykkm52dh4wWXo0IcfNuubHlCZ-4LNYyTqhCyoGLCeVx2KkfMPg17hf8JjivGZDpF_2vvN77e7Wnwi_BtQR427YeSEi9IgUyp4C-6iGPV3j-LzVjNHbMX0Ln6ZdY41a4avROZdLCF2ijFRoJ7WbQ
         refreshToken:
-          expiresOn: 2020-11-04T17:00:07Z
+          expiresOn: '2020-11-04T17:00:07Z'
           token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJSUzI1NiIsImRldmljZV9pZCI6ImFzZGFzZHNzcyIsImV4cCI6MTU5OTIzODgwNywiaXNfcmVmcmVzaF90b2tlbiI6ZmFsc2UsInJvbGVzIjpbIkJBU0lDIl0sInN1YiI6IiIsInR5cCI6IkpXVCJ9.rJxeiuf8h6tKnzXHDADeq2G3u78CWRnvsAI4oJEJHoL8Kv5rPnO9phZN6oqlvEiFNdjxNZsAPeQN5-Y25nOMVqgKgk3eeJ9ne9dFpf2y5agosWzRR477deNngY9wDsgsjTxY3XDOZQV8rkIlf86pRcgf3kaIodTtqcAQtl_r9vJu35h4GkUU49HZA_dYe8g0sq7ykkm52dh4wWXo0IcfNuubHlCZ-4LNYyTqhCyoGLCeVx2KkfMPg17hf8JjivGZDpF_2vvN77e7Wnwi_BtQR427YeSEi9IgUyp4C-6iGPV3j-LzVjNHbMX0Ln6ZdY41a4avROZdLCF2ijFRoJ7WbQ
     Error:
       type: object
@@ -370,12 +370,12 @@ components:
       type: string
       description: rfc3339 date time
       format: date-time
-      example: 2020-09-21T17:00:07Z
+      example: '2020-09-21T17:00:07Z'
     Date:
       type: string
       description: rfc 3339 date (without time)
       format: date
-      example: 2020-09-21
+      example: '2020-09-21'
     PolicyType:
       required:
       - coverages
@@ -446,11 +446,15 @@ components:
       description: like Civic 2019 (which belongs to honda brand and Civic)
       example:
         code: 1116
-        name: "2014"
+        name: '2014'
     VehicleVersion:
       title: Vehicle version
       required:
       - code
+      - class
+      - vehicleType
+      - amisCode
+      - name
       type: object
       properties:
         code:
@@ -467,6 +471,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/VehicleUsage'
+          description: 'valid usages for this version'
+        amisCode:
+          type: string
+          example: G0570037
         characteristics:
           type: array
           items:
@@ -488,7 +496,9 @@ components:
       - version
       - vin
       - year
+      - usage
       type: object
+      description: 'user vehicle instance'
       properties:
         brand:
           $ref: '#/components/schemas/VehicleBrand'
@@ -601,7 +611,7 @@ components:
         firstLastName:
           title: First last name
           type: string
-          example: garciía
+          example: garcía
         secondLastName:
           title: The Second last name
           type: string
@@ -615,11 +625,11 @@ components:
     InsuredEntity:
       required:
       - entity
+      - coverages
       type: object
       properties:
         entity:
-          anyOf:
-          - $ref: '#/components/schemas/Vehicle'
+          $ref: '#/components/schemas/Vehicle'
         coverages:
           type: array
           items:
@@ -634,8 +644,12 @@ components:
             $ref: '#/components/schemas/Person'
     Policy:
       required:
-      - coverages
       - policyType
+      - id
+      - status
+      - insuredEntities
+      - number
+      - policyHolder
       type: object
       properties:
         id:
@@ -656,7 +670,9 @@ components:
         issueDate:
           $ref: '#/components/schemas/DateTime'
         insuredEntities:
-          $ref: '#/components/schemas/InsuredEntity'
+          type: array
+          items:
+            $ref: '#/components/schemas/InsuredEntity'
         netPremium:
           type: number
         subtotal:
@@ -684,7 +700,9 @@ components:
         policies:
         - fee: 0
           taxes: 454070
-          starteDate: 2020-09-21T17:00:07Z
+          starteDate: '2020-09-21T17:00:07Z'
+          issueDate: '2020-09-21T17:00:07Z'
+          endDate: '2021-09-21T17:00:07Z'
           netPremium: 2837910
           total: 3291980
           subtotal: 2837910
@@ -694,124 +712,125 @@ components:
             description: poliza anual de valor comercial
           insuredEntities:
           - coverages:
-            - id: 4d2a605d-a74a-41e3-b79d-a3c63988ab8a
-              coverage_type:
-                id: ca2ead83-5b81-4480-9a0b-744ba31601c0
-                name: AL
-              enabled: true
-              premium: 233330
-            - id: 15503afe-19e2-470b-8d57-697fb3ac45e7
-              coverage_type:
-                id: 6c434f2a-d0f3-4442-b4c5-6680ec0fda6d
-                name: GM
-              sum_assured: 400000
-              enabled: true
-              premium: 53500
-            - id: 650021f5-69a4-49e9-9eaf-bbb01400c7d2
-              coverage_type:
-                id: 42d81165-f6f7-4c0d-b33b-999a3f3ee905
-                name: RCP
-              sum_assured: 1500000
-              enabled: true
-              premium: 271990
-            - id: 8b1585ce-d5be-45c5-9d7b-ba043cd06689
-              coverage_type:
-                id: fa67b067-ffdf-431b-aef5-53e60dfe6be6
-                name: RCB
-              sum_assured: 1500000
-              enabled: true
-              premium: 407990
-            - id: f4609945-fc92-4c1f-a5f3-a7a01a8cbe91
-              coverage_type:
-                id: c2b3cdd7-2c89-4d92-aa04-6b343ad91425
-                name: DM
-              deductible: 0.1
-              sum_assured: 243408
-              enabled: true
-              premium: 1167500
-            - id: 8cda7f03-1a49-4a61-a9f0-70b716d89efa
-              coverage_type:
-                id: ed22aeaf-8623-4d4d-ad59-106a774ed9a5
-                name: AV
-              enabled: true
-              premium: 100000
-            - id: c37b9590-2d30-4fff-a94f-92fb1842357f
-              coverage_type:
-                id: fc9e6248-5746-4480-a9d0-d683cb6a6c10
-                name: RT
-              deductible: 0.05
-              sum_assured: 243408
-              enabled: true
-              premium: 603600
+              - id: 4d2a605d-a74a-41e3-b79d-a3c63988ab8a
+                coverage_type:
+                  id: ca2ead83-5b81-4480-9a0b-744ba31601c0
+                  name: AL
+                enabled: true
+                premium: 233330
+              - id: 15503afe-19e2-470b-8d57-697fb3ac45e7
+                coverage_type:
+                  id: 6c434f2a-d0f3-4442-b4c5-6680ec0fda6d
+                  name: GM
+                sum_assured: 400000
+                enabled: true
+                premium: 53500
+              - id: 650021f5-69a4-49e9-9eaf-bbb01400c7d2
+                coverage_type:
+                  id: 42d81165-f6f7-4c0d-b33b-999a3f3ee905
+                  name: RCP
+                sum_assured: 1500000
+                enabled: true
+                premium: 271990
+              - id: 8b1585ce-d5be-45c5-9d7b-ba043cd06689
+                coverage_type:
+                  id: fa67b067-ffdf-431b-aef5-53e60dfe6be6
+                  name: RCB
+                sum_assured: 1500000
+                enabled: true
+                premium: 407990
+              - id: f4609945-fc92-4c1f-a5f3-a7a01a8cbe91
+                coverage_type:
+                  id: c2b3cdd7-2c89-4d92-aa04-6b343ad91425
+                  name: DM
+                deductible: 0.1
+                sum_assured: 243408
+                enabled: true
+                premium: 1167500
+              - id: 8cda7f03-1a49-4a61-a9f0-70b716d89efa
+                coverage_type:
+                  id: ed22aeaf-8623-4d4d-ad59-106a774ed9a5
+                  name: AV
+                enabled: true
+                premium: 100000
+              - id: c37b9590-2d30-4fff-a94f-92fb1842357f
+                coverage_type:
+                  id: fc9e6248-5746-4480-a9d0-d683cb6a6c10
+                  name: RT
+                deductible: 0.05
+                sum_assured: 243408
+                enabled: true
+                premium: 603600
             beneficiaries:
-            - id: 59f6dece-1c10-49a1-9be6-bada6b7928c7
-              email: example@email.com
-              names: juan carlos
-              personType: FISICA
-              phones:
-              - number: "3320357045"
-                type: main
-                countryNumberCode: 52
-              rfc: GALJ620819V96
-              personTypeData:
-                birthdate: {}
-                civilStatus:
-                  id: 0
-                  description: unknown
-                firstLastName: garciía
-                secondLastName: luna
-                gender:
-                  code: 0
-                  name: No Definido
+              - id: 59f6dece-1c10-49a1-9be6-bada6b7928c7
+                email: example@email.com
+                names: juan carlos
+                personType: FISICA
+                phones:
+                - number: '3320357045'
+                  type: main
+                  countryNumberCode: 52
+                rfc: GALJ620819V96
+                phisicalPerson:
+                  birthdate: {}
+                  civilStatus:
+                    id: 0
+                    description: unknown
+                  firstLastName: garcía
+                  secondLastName: luna
+                  gender:
+                    code: 0
+                    name: No Definido
             entity:
               brand:
-                code: 8
-                name: dodge
-                amisCode: 2
+                code: 22
+                name: mercedes benz
+                amisCode: '9'
               model:
-                code: 171
-                name: challenger
-                amisCode: 1108
+                code: 471
+                name: 'clase e 430'
+                amisCode: '348'
               year:
                 code: 1116
-                name: "2014"
+                name: '2014'
               version:
-                code: 4804
-                name: srt8 atx, v8, 6.4l, 470 cp, 4 puertas, aut
+                code: 13416
+                name: avantgarde v8 4.3l 279 cp 4 puertas aut
                 class:
-                  code: 17
-                  name: deportivo
+                  code: 18
+                  name: lujo
                 vehicleType:
                   code: 1
                   name: automovil
+                amisCode: 'G0570037'
               plates: AEJ2030
               vin: 19XFB2F5XCE316987
               color:
                 code: 0
-                name: no definido
+                name: 'no definido'
               usage:
                 code: 1
                 name: particular
             drivers:
-            - id: 59f6dece-1c10-49a1-9be6-bada6b7928c7
-              email: example@email.com
-              names: juan carlos
-              personType: FISICA
-              phones:
-              - number: "3320357045"
-                type: main
-                countryNumberCode: 52
-              rfc: GALJ620819V96
-              personTypeData:
-                birthdate: {}
-                civilStatus:
-                  id: 0
-                  description: unknown
-                firstLastName: garciía
-                secondLastName: luna
-                gender:
-                  code: 0
-                  name: No Definido
+              - id: 59f6dece-1c10-49a1-9be6-bada6b7928c7
+                email: example@email.com
+                names: juan carlos
+                personType: FISICA
+                phones:
+                - number: '3320357045'
+                  type: main
+                  countryNumberCode: 52
+                rfc: GALJ620819V96
+                personTypeData:
+                  birthdate: {}
+                  civilStatus:
+                    id: 0
+                    description: unknown
+                  firstLastName: garcía
+                  secondLastName: luna
+                  gender:
+                    code: 0
+                    name: No Definido
           id: 81b1c0a8-4843-45c5-8836-734a0bb26718
           number: ae-101
           status: ISSUED
@@ -821,16 +840,16 @@ components:
             names: juan carlos
             personType: FISICA
             phones:
-            - number: "3320357045"
+            - number: '3320357045'
               type: main
               countryNumberCode: 52
             rfc: GALJ620819V96
             personTypeData:
-              birthdate: {}
+              birthdate: '1978-09-21'
               civilStatus:
                 id: 0
                 description: unknown
-              firstLastName: garciía
+              firstLastName: garcía
               secondLastName: luna
               gender:
                 code: 0
@@ -863,7 +882,7 @@ components:
           default: main
         countryNumberCode:
           type: string
-          default: "52"
+          default: '52'
     Email:
       pattern: ^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
       type: string
@@ -1043,10 +1062,10 @@ components:
           title: RFC
           pattern: ^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([A-Z\d]{3})?$
           type: string
-        personTypeData:
-          anyOf:
-          - $ref: '#/components/schemas/PhisicalPerson'
-          - $ref: '#/components/schemas/MoralPerson'
+        phisicalPerson:
+          $ref: '#/components/schemas/PhisicalPerson'
+        moralPerson:
+          $ref: '#/components/schemas/MoralPerson'
     VehicleVersion_class:
       type: object
       properties:
@@ -1058,7 +1077,7 @@ components:
       type: object
       properties:
         code:
-          $ref: '#/components/schemas/VehicleUsage'
+          $ref: '#/components/schemas/Code'
         name:
           type: string
       description: vehicle type such as 'automovil'
