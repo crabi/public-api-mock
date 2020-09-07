@@ -12,3 +12,13 @@ module.exports.loginUser = function loginUser (req, res, next, body, osName, osV
       utils.writeJson(res, response);
     });
 };
+
+module.exports.refreshAccessToken = function refreshAccessToken (req, res, next, body, osName, osVersion, brand, clientVersion) {
+  User.refreshAccessToken(body, osName, osVersion, brand, clientVersion)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
