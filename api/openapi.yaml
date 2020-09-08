@@ -24,6 +24,8 @@ tags:
   description: Related to policies
 - name: user
   description: Related to users and sessions
+- name: lead
+  description: Related to leads
 paths:
   /policy/search:
     get:
@@ -312,8 +314,71 @@ paths:
               schema:
                 $ref: '#/components/schemas/Session'
       x-swagger-router-controller: User
+  /lead/createOrUpdate/email/{email}:
+    post:
+      tags: 
+        - lead
+      summary: create lead
+      description: |
+        By passing lead information as array of properties, you can create or update a lead
+      operationId: createOrUpdateLead
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema: 
+            type: string
+          description: the email of lead
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadRequest'
+            example:
+              properties:
+                - property: "persona_nombre"
+                  value: "Ricardo"
+                - property: "lead_marca_vehiculo"
+                  value: "Audi"
+                - property: "lead_modelo_vehiculo"
+                  value: "A4"
+                - property: "lead_year_vehicle"
+                  value: "2017"
+                - property: "lead_version_vehiculo"
+                  value: "S line l4"
+      responses:
+          '200':
+            description: Lead successfully created/updated
+          '400':
+            description: Bad input. Not param or body
+      security:
+            - bearerAuth: []
+      x-swagger-router-controller: Lead
 components:
   schemas:
+    LeadRequest:
+      description: The body required for a lead request
+      type: object
+      required:
+        - properties
+      properties:
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'          
+    Property:
+      description: Property of lead
+      type: object
+      required:
+        - property
+        - value
+      properties:
+        property:
+          description: Property of lead. ("persona_nombre", "lead_marca_vehiculo")
+          type: string
+        value:
+          description: Value of property. ("Ricardo", "Audi")
+          type: string
     Token:
       type: object
       properties:
